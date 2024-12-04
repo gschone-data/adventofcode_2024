@@ -1,6 +1,6 @@
 library(data.table)
 library(dplyr)
-data <-read.delim("input",sep="",header=F)
+data <-read.delim("input.data",sep="",header=F)
 setDT(data)
 
 
