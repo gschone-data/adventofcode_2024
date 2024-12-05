@@ -3,29 +3,21 @@ library(stringr)
 data <-read.delim("input5.data",sep="\n",header=F)
 setDT(data)
 
-data |> filter(str_detect(data$V1,"\\|"))->obligations
+data |> dplyr::filter(str_detect(data$V1,"\\|"))->obligations
 fread(text=obligations$V1,sep="|",header=F)->obligations
 
-data |> filter(str_detect(data$V1,","))->print_seq
+data |> dplyr::filter(str_detect(data$V1,","))->print_seq
 
-test<-print_seq$V1[1]
-
-print_test<-str_split(test,",")
-print_test
-
-n=1
-vec=vector()
-for (seq in print_seq$V1){
-  print_seq_split<-str_split(seq,",")
-res=0  
-for(i in (1:(length(print_seq_split[[1]])-1))){
-res=res+(nrow(obligations[V2==as.integer(print_test[[1]][i])&V1%in%print_test[[1]][i+1:length(print_test[[1]])]]))
-}
-vec[n]=res
-n=n+1
-}
-print="85"
-sequence=print_seq$V1[34]
+# vec=vector()
+# for (seq in print_seq$V1){
+#   print_seq_split<-str_split(seq,",")
+# res=0  
+# for(i in (1:(length(print_seq_split[[1]])-1))){
+# res=res+(nrow(obligations[V2==as.integer(print_test[[1]][i])&V1%in%print_test[[1]][i+1:length(print_test[[1]])]]))
+# }
+# vec[n]=res
+# n=n+1
+# }
 
 test_sequence<-function(sequence){
   res=0
@@ -47,9 +39,11 @@ test_sequence<-function(sequence){
     }
 }  
 res=vector()
-for (i in 1:204){
-vec[i]=test_sequence(print_seq$V1[i])
+for (i in 1:nrow(print_seq)){
+res[i]=test_sequence(print_seq$V1[i])
   }
-sum(vec)
+sum(res)
 
-cbind(print_seq$V1,vec)->day5_2
+as.data.frame(cbind(print_seq$V1,res))->day5_2
+day5_2 |> dplyr::filter(res=="0")->day5_2
+saveRDS(day5_2,"day5_2.data")
