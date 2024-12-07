@@ -74,3 +74,4 @@ positions |> group_by(x,y) |> summarise(nb_pass=n())->total
 total
 total$nb_pass>1
 setDT(total )
+saveRDS(positions,"positions.data")
