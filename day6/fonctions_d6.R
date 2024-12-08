@@ -20,11 +20,11 @@ next_stop<-function(pos){
     pos_next<-list(x=pos$x-(tmp-2),y=pos$y,d=pos$d)
     },
   2=={
-    tmp<-which(data_w[pos$x,pos$y:130]=="#")[1]
+    tmp<-which(data_w[pos$x,pos$y:ncol(data_w)]=="#")[1]
     pos_next<-list(x=pos$x,y=pos$y+(tmp-2),d=pos$d)
   },
   3=={
-    tmp<-which(data_w[pos$x:130][[pos$y]]=="#")[1]
+    tmp<-which(data_w[pos$x:ncol(data_w)][[pos$y]]=="#")[1]
     pos_next<-list(x=pos$x+(tmp-2),y=pos$y,d=pos$d)
   },
   4=={

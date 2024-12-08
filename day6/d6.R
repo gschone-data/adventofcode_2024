@@ -4,12 +4,22 @@ library(dplyr)
 
 
 source("~/avent_2024/day6/fonctions_d6.R")
-data <-read.delim("input6_1.data",sep="",header=F)
-data_w<-str_split(data$V1,"")
 
+data <-read.delim("~/avent_2024/day6/input6_1.data",sep="",header=F)
+data <-read.delim("~/avent_2024/day6/input6_example.data",sep="",header=F)
+
+tmp<-setDT(data)
+tmp$index=seq.int(nrow(tmp))
+tmp$v2=str_detect(tmp$V1,"\\^")
+i=tmp[v2==T,index]
+j=unlist(gregexpr('\\^', tmp[i,]))[1]
+rm(tmp)
+pos0=list(x=i,y=j,d=1)
+
+data_w<-str_split(data$V1,"")
 data_w<-as.data.frame(data_w)
 data_w<-transpose(setDT(data_w))
-pos0<-list(x=40,y=47,d=1)
+
 
 liste_stop<-data.frame()
 liste_stop<-rbind(liste_stop,pos0)
@@ -23,8 +33,8 @@ repeat{
   stop<-change_dir(stop)
   
 }
-liste_stop[135,"y"]=130
-
+#liste_stop[135,"y"]=130
+liste_stop[12,"x"]=10
 #liste_stop$ecart<-abs(liste_stop$x-lead(liste_stop$x))+abs(liste_stop$y-lead(liste_stop$y))
 #sum(liste_stop$ecart,na.rm=T)
 
@@ -38,8 +48,9 @@ for (k in 2:nrow(liste_stop)){
   liste_positions<-rbind(liste_positions,temp)
   
 }
+library(ggplot2)
 ggplot(liste_positions) +geom_point(aes(x=x,y=y),size=0.5)
-
+liste_positions |> group_by(x,y) |> summarise(passage=n())->res
 ##boucle_finale
 
 liste_obs<-data.table()
@@ -69,27 +80,23 @@ for (k in 2:nrow(liste_positions)){
 }
 
 liste_obs |> group_by(x,y) |> summarise(tot=n())->liste_obs_tot
-liste_obs_tot |> filter(x==40)
-stop
-obs
-saveRDS(liste_obs_tot,"resultP2.data")
-data_w<-ajout_obstactle(liste_obs[500,])
+#saveRDS(liste_obs_tot,"resultP2.data")
 
 
-py<- read.delim("~/avent_2024/day6/res_python.data",sep=",",header=F)
-py$V2=sub(pattern = "\\)",replacement = "",x=py$V2)
-py$V1=sub(pattern = "\\(",replacement = "",x=py$V1)
-py$V1=as.integer(py$V1)
-py$V2=as.integer(py$V2)
-py$V3="py"
-head(py)
-liste_obs_tot |> left_join(py,by=join_by("x"=="V1","y"=="V2"))->test
-setDT(test)
-head(test)
-test[is.na(V3)]
-py |> group_by(V1,V2) |> summarise(n())->py_t
-
-head(py_t)
+# py<- read.delim("~/avent_2024/day6/res_python.data",sep=",",header=F)
+# py$V2=sub(pattern = "\\)",replacement = "",x=py$V2)
+# py$V1=sub(pattern = "\\(",replacement = "",x=py$V1)
+# py$V1=as.integer(py$V1)
+# py$V2=as.integer(py$V2)
+# py$V3="py"
+# head(py)
+# liste_obs_tot |> left_join(py,by=join_by("x"=="V1","y"=="V2"))->test
+# setDT(test)
+# head(test)
+# test[is.na(V3)]
+# py |> group_by(V1,V2) |> summarise(n())->py_t
+# 
+# head(py_t)
 
 data_w<-data_w0
 data_w0<-data_w
@@ -130,7 +137,7 @@ for (k in 1:10){
   
   
 }
-liste_positions_tmp |> tail(1)
-lire_autour(liste_positions_tmp |> tail(1))
-                   )
-liste_positions_tmp
+
+setDT(liste_obs_tot)
+
+liste_obs_tot[x==39]
