@@ -91,7 +91,8 @@ py |> group_by(V1,V2) |> summarise(n())->py_t
 
 head(py_t)
 
-
+data_w<-data_w0
+data_w0<-data_w
 for (k in 1:10){
   data_w<-ajout_obstactle(liste_obs_tot[k,])
   liste_stop<-data.table()
@@ -99,7 +100,7 @@ for (k in 1:10){
   stop=pos0
   repeat{
     stop<-next_stop(stop)
-    if(k!=2&nrow(liste_stop[x==stop$x&y==stop$y&d==stop$d,])>0){
+    if(nrow(liste_stop[x==stop$x&y==stop$y&d==stop$d,])>0){
       liste_obs<-rbind(liste_obs,obs)
       nb_loop<-nb_loop+1
       print(nb_loop)
@@ -111,19 +112,25 @@ for (k in 1:10){
     if (next_car(stop)=="#"){change_dir(stop)}
     
   }
-  
+  liste_stop<-rbind(liste_stop,stop)
   liste_positions_tmp<-data.frame(pos0)
-  for (k in 2:nrow(liste_stop)){
+  for (i in 2:nrow(liste_stop)){
     
-    pos1<-liste_stop[k-1,]
-    pos2<-liste_stop[k,]
+    pos1<-liste_stop[i-1,]
+    pos2<-liste_stop[i,]
     temp<-make_liste_positions(pos1,pos2)
     liste_positions_tmp<-rbind(liste_positions_tmp,temp)
     
   }
-  ggplot(liste_positions_tmp) +geom_point(aes(x=x,y=y),size=0.5)
+  ggplot(liste_positions_tmp) +
+  geom_point(aes(x=x,y=y),size=0.5)+
+  geom_point(data=liste_positions_tmp |> tail(1),aes(x=x,y=y),color="red")
   
   data_w<-data_w0
   
   
 }
+liste_positions_tmp |> tail(1)
+lire_autour(liste_positions_tmp |> tail(1))
+                   )
+liste_positions_tmp
