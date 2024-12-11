@@ -9,3 +9,5 @@ boucle repeat/break
 amélioration manipulation data.table
 
 création de classes personnalisées
+
+ggtools permutations/arrangements
