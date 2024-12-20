@@ -3,7 +3,7 @@
 library(data.table)
 library(stringr)
 source("day16_f.R")
-data_str<-readLines("day16.data")
+data_str<-readLines("day16_mini2.data")
 data<-str_split(data_str," ")
 data<-data.table(data)
 
@@ -16,11 +16,12 @@ end=get_car(data,"E")
 
 pos<-start
 dist0<-calc_dist(start,end)
-tmp<-data.table(matrix(nrow=0,ncol=5))
-colnames(tmp)=c("x","y","d","dist","c")
+tmp<-data.table(matrix(nrow=0,ncol=6))
+colnames(tmp)=c("x","y","d","dist","c","tot")
 res<-tmp
 pos$dist=dist0
 pos$c=0
+pos$tot=1
 res<-rbind(res,pos)
 liste_opt<-data.table(matrix(ncol=3,nrow=0))
 colnames(liste_opt)=c("dx","dy","d")
@@ -35,12 +36,13 @@ while(nrow(prev)!=0){
      nxt<-calc_options(prev[l,],o) 
      dist<-calc_dist(nxt,end)
      c<-prev[l,c]+ifelse(o$dx!=0|o$dy!=0,1,0)+ifelse(nxt$d==prev[l,d],0,1000)
+     tot=prev[l,tot]+1
      tst<-res[x==nxt$x&y==nxt$y]
      if(nrow(tst)==0){
-     tmp<-rbind(tmp,data.table(x=nxt$x,y=nxt$y,d=nxt$d,dist=dist,c=c))
+     tmp<-rbind(tmp,data.table(x=nxt$x,y=nxt$y,d=nxt$d,dist=dist,c=c,tot=tot))
      }else{
        if(tst$c>c){
-         tmp<-rbind(tmp,data.table(x=nxt$x,y=nxt$y,d=nxt$d,dist=dist,c=c))
+         tmp<-rbind(tmp,data.table(x=nxt$x,y=nxt$y,d=nxt$d,dist=dist,c=c,tot=tot))
          
        }
      }
